@@ -1,5 +1,3 @@
 import { main } from './lib/setBackground'; 
 
-main(3);
-
-
+main(0);

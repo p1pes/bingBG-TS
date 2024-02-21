@@ -10,7 +10,56 @@ const settings = { method: "get" }
 const homeDirectory = os.homedir();
 const file = `${homeDirectory}/Pictures/bingBG/`;
 
-export function main(num: number){
-    console.log(file);
-    return 1+num;
+export async function main(num: number){
+    const json = await getJson();
+    for (let i=0; i<json.images.length; i++) {
+        let imageUrl = urlprefix + json.images[i].url;
+        let filename = file+camelCase(json.images[i].title)+".jpeg";
+        await downloadImage(imageUrl, filename);
+    }
+    //set latest as background
+    await setWallpaper(file+camelCase(json.images[num].title)+".jpeg");    
 }
+
+async function getJson(){
+    try {
+        const response = await axios.get(url, settings);
+        return response.data;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+async function setWallpaper(filename: string){
+    const command = `gsettings set org.gnome.desktop.background picture-uri-dark file://${filename}`;    
+    //console.log(command);
+    exec(command, (error, stdout, stderr) => {
+        if (error) {
+            console.error(`Error setting wallpaper: ${error.message}`);
+            return;
+        }
+        if (stderr) {
+            console.error(`gsettings stderr: ${stderr}`);
+            return;
+        }
+        console.log(`Wallpaper set successfully: ${filename}`);
+    });
+}
+
+
+async function downloadImage(imageUrl: string, filename: string){
+    try {
+        //make dir if not exist
+        fs.promises.mkdir(file, { recursive: true }).catch(console.error);
+        const existsLocally = await fileExistsLocally(filename);
+        if (existsLocally) {
+            //console.log('already downloaded', filename);
+            return;
+        }
+        const response = await axios.get(imageUrl, { responseType: 'arraybuffer' });
+        await fs.promises.writeFile(filename, Buffer.from(response.data, 'binary'));
+        console.log('New Image/s downloaded successfully:', filename);
+    } catch (error) {
+        console.error('Error downloading image:', error);
+    }
+}    
