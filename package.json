@@ -1,0 +1,23 @@
+{
+  "name": "bingbg-ts",
+  "version": "1.0.0",
+  "main": "bin/app.js",
+  "repository": "git@github.com:p1pes/bingBG-TS.git",
+  "author": "tim",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc --build --diagnostics --verbose",
+    "start": "node ./bin/app.js",
+    "dev": "ts-node ./src/app.ts"
+  },
+  "dependencies": {
+    "@types/node": "^20.11.19",
+    "axios": "^1.6.7",
+    "fs": "^0.0.1-security",
+    "node-fetch": "^3.3.2",
+    "typescript": "^5.3.3"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.2"
+  }
+}
