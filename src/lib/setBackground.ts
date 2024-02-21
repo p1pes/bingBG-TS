@@ -10,7 +10,10 @@ const settings = { method: "get" }
 const homeDirectory = os.homedir();
 const file = `${homeDirectory}/Pictures/bingBG/`;
 
-export async function main(num: number){
+export async function main(days: string){
+// Check if the string is a valid number or less than 8. if it is, set to 0
+const imgNum = !isNaN(parseFloat(days)) ? parseFloat(days) < 8 ? parseFloat(days) : 0 : 0;
+
     const json = await getJson();
     for (let i=0; i<json.images.length; i++) {
         let imageUrl = urlprefix + json.images[i].url;
@@ -18,7 +21,7 @@ export async function main(num: number){
         await downloadImage(imageUrl, filename);
     }
     //set latest as background
-    await setWallpaper(file+camelCase(json.images[num].title)+".jpeg");    
+    await setWallpaper(file+camelCase(json.images[imgNum??0].title)+".jpeg");    
 }
 
 async function getJson(){

@@ -1,3 +1,3 @@
 import { main } from './lib/setBackground'; 
 
-main(0);
+main(process.argv[2]);

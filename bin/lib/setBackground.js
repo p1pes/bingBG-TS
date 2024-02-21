@@ -23,8 +23,10 @@ const url = `${urlprefix}/HPImageArchive.aspx?format=js&idx=0&n=8&mkt=en-UK`;
 const settings = { method: "get" };
 const homeDirectory = os_1.default.homedir();
 const file = `${homeDirectory}/Pictures/bingBG/`;
-function main(num) {
+function main(days) {
     return __awaiter(this, void 0, void 0, function* () {
+        // Check if the string is a valid number or less than 8. if it is, set to 0
+        const imgNum = !isNaN(parseFloat(days)) ? parseFloat(days) < 8 ? parseFloat(days) : 0 : 0;
         const json = yield getJson();
         for (let i = 0; i < json.images.length; i++) {
             let imageUrl = urlprefix + json.images[i].url;
@@ -32,7 +34,7 @@ function main(num) {
             yield downloadImage(imageUrl, filename);
         }
         //set latest as background
-        yield setWallpaper(file + (0, utils_1.camelCase)(json.images[num].title) + ".jpeg");
+        yield setWallpaper(file + (0, utils_1.camelCase)(json.images[imgNum !== null && imgNum !== void 0 ? imgNum : 0].title) + ".jpeg");
     });
 }
 exports.main = main;
