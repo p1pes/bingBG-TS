@@ -1,12 +1,16 @@
 import { exec } from 'child_process';
-const os = require('os');
+import { platform } from 'os';
+import { join } from 'path';
+
 
 export function setWallpaper(image: string){
     if (isWindows()) {
         setWindowsWallpaper(image);
+        return;
     }
     else if (isGNOME()) {
-        setGnomWallpaper(image); return
+        setGnomWallpaper(image); 
+        return;
     }
     else {
         console.log('Unsupported operating system.');
@@ -14,15 +18,15 @@ export function setWallpaper(image: string){
 }
 
 function isWindows() {
-    return os.platform() === 'win32';
+    return platform() === 'win32';
 }
 
 function isGNOME() {
-    return os.platform() === 'linux' && process.env.XDG_CURRENT_DESKTOP && process.env.XDG_CURRENT_DESKTOP.toLowerCase().includes('gnome');
+    return platform() === 'linux' && process.env.XDG_CURRENT_DESKTOP && process.env.XDG_CURRENT_DESKTOP.toLowerCase().includes('gnome');
 }
 
 async function setGnomWallpaper(filename: string){
-    const command = `gsettings set org.gnome.desktop.background picture-uri-dark file://${filename}`;    
+    const command = `gsettings set org.gnome.desktop.background picture-uri-dark file://${filename}`;
     //console.log(command);
     exec(command, (error, stdout, stderr) => {
         if (error) {
@@ -36,20 +40,16 @@ async function setGnomWallpaper(filename: string){
         console.log(`Wallpaper set successfully: ${filename}`);
     });
 }
-async function setWindowsWallpaper(filename: string) {
-    // Command to set desktop background using PowerShell
-    const command = `powershell.exe -ExecutionPolicy Bypass -Command "Set-ItemProperty -path 'HKCU:\\Control Panel\\Desktop\\' -name Wallpaper -value '${filename}'; rundll32.exe user32.dll, UpdatePerUserSystemParameters"`;
+async function setWindowsWallpaper(imagePath: string) {
+    const psScriptPath = join(__dirname, 'SetWall.ps1');  
+    const command = `powershell.exe -ExecutionPolicy Bypass -File "${psScriptPath}" "${imagePath}"`;
+    //console.log(command);
 
-    // Execute the command
     exec(command, (error, stdout, stderr) => {
         if (error) {
-            console.error(`Error setting desktop background: ${error.message}`);
-            return;
+            console.error('Error setting wallpaper:', error);
+        } else {
+            console.log('Wallpaper set successfully!');
         }
-        if (stderr) {
-            console.error(`Command error: ${stderr}`);
-            return;
-        }
-        console.log(`Desktop background set to ${filename}`);
     });
 }

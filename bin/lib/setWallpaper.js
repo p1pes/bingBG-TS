@@ -11,9 +11,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.setWallpaper = void 0;
 const child_process_1 = require("child_process");
-const os = require('os');
+const os_1 = require("os");
+const path_1 = require("path");
 function setWallpaper(image) {
     if (isWindows()) {
+        setWindowsWallpaper(image);
+        return;
     }
     else if (isGNOME()) {
         setGnomWallpaper(image);
@@ -25,10 +28,10 @@ function setWallpaper(image) {
 }
 exports.setWallpaper = setWallpaper;
 function isWindows() {
-    return os.platform() === 'win32';
+    return (0, os_1.platform)() === 'win32';
 }
 function isGNOME() {
-    return os.platform() === 'linux' && process.env.XDG_CURRENT_DESKTOP && process.env.XDG_CURRENT_DESKTOP.toLowerCase().includes('gnome');
+    return (0, os_1.platform)() === 'linux' && process.env.XDG_CURRENT_DESKTOP && process.env.XDG_CURRENT_DESKTOP.toLowerCase().includes('gnome');
 }
 function setGnomWallpaper(filename) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -47,19 +50,18 @@ function setGnomWallpaper(filename) {
         });
     });
 }
-function setWindowsWallpaper(filename) {
-    // Command to set desktop background using PowerShell
-    const command = `powershell.exe -ExecutionPolicy Bypass -Command "Set-ItemProperty -path 'HKCU:\\Control Panel\\Desktop\\' -name Wallpaper -value '${filename}'; rundll32.exe user32.dll, UpdatePerUserSystemParameters"`;
-    // Execute the command
-    (0, child_process_1.exec)(command, (error, stdout, stderr) => {
-        if (error) {
-            console.error(`Error setting desktop background: ${error.message}`);
-            return;
-        }
-        if (stderr) {
-            console.error(`Command error: ${stderr}`);
-            return;
-        }
-        console.log(`Desktop background set to ${filename}`);
+function setWindowsWallpaper(imagePath) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const psScriptPath = (0, path_1.join)(__dirname, 'SetWall.ps1');
+        const command = `powershell.exe -ExecutionPolicy Bypass -File "${psScriptPath}" "${imagePath}"`;
+        //console.log(command);
+        (0, child_process_1.exec)(command, (error, stdout, stderr) => {
+            if (error) {
+                console.error('Error setting wallpaper:', error);
+            }
+            else {
+                console.log('Wallpaper set successfully!');
+            }
+        });
     });
 }
