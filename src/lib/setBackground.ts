@@ -1,7 +1,7 @@
 import axios from 'axios';
 import fs from 'fs';
 import os, { homedir } from 'os';
-import { exec } from 'child_process';
+import { setWallpaper } from './setWallpaper'
 import { camelCase, fileExistsLocally } from './utils';
 
 const urlprefix = "https://www.bing.com";
@@ -33,23 +33,6 @@ async function getJson(){
     }
 }
 
-async function setWallpaper(filename: string){
-    const command = `gsettings set org.gnome.desktop.background picture-uri-dark file://${filename}`;    
-    //console.log(command);
-    exec(command, (error, stdout, stderr) => {
-        if (error) {
-            console.error(`Error setting wallpaper: ${error.message}`);
-            return;
-        }
-        if (stderr) {
-            console.error(`gsettings stderr: ${stderr}`);
-            return;
-        }
-        console.log(`Wallpaper set successfully: ${filename}`);
-    });
-}
-
-
 async function downloadImage(imageUrl: string, filename: string){
     try {
         //make dir if not exist
@@ -65,4 +48,6 @@ async function downloadImage(imageUrl: string, filename: string){
     } catch (error) {
         console.error('Error downloading image:', error);
     }
-}    
+}
+
+

@@ -16,7 +16,7 @@ exports.main = void 0;
 const axios_1 = __importDefault(require("axios"));
 const fs_1 = __importDefault(require("fs"));
 const os_1 = __importDefault(require("os"));
-const child_process_1 = require("child_process");
+const setWallpaper_1 = require("./setWallpaper");
 const utils_1 = require("./utils");
 const urlprefix = "https://www.bing.com";
 const url = `${urlprefix}/HPImageArchive.aspx?format=js&idx=0&n=8&mkt=en-UK`;
@@ -34,7 +34,7 @@ function main(days) {
             yield downloadImage(imageUrl, filename);
         }
         //set latest as background
-        yield setWallpaper(file + (0, utils_1.camelCase)(json.images[imgNum !== null && imgNum !== void 0 ? imgNum : 0].title) + ".jpeg");
+        yield (0, setWallpaper_1.setWallpaper)(file + (0, utils_1.camelCase)(json.images[imgNum !== null && imgNum !== void 0 ? imgNum : 0].title) + ".jpeg");
     });
 }
 exports.main = main;
@@ -47,23 +47,6 @@ function getJson() {
         catch (error) {
             console.log(error);
         }
-    });
-}
-function setWallpaper(filename) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const command = `gsettings set org.gnome.desktop.background picture-uri-dark file://${filename}`;
-        //console.log(command);
-        (0, child_process_1.exec)(command, (error, stdout, stderr) => {
-            if (error) {
-                console.error(`Error setting wallpaper: ${error.message}`);
-                return;
-            }
-            if (stderr) {
-                console.error(`gsettings stderr: ${stderr}`);
-                return;
-            }
-            console.log(`Wallpaper set successfully: ${filename}`);
-        });
     });
 }
 function downloadImage(imageUrl, filename) {
