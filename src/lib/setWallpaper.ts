@@ -2,8 +2,23 @@ import { exec } from 'child_process';
 const os = require('os');
 
 export function setWallpaper(image: string){
-    console.log(os.platform());
-    console.log(process.env.XDG_CURRENT_DESKTOP);
+    if (isWindows()) {
+        setWindowsWallpaper(image);
+    }
+    else if (isGNOME()) {
+        setGnomWallpaper(image); return
+    }
+    else {
+        console.log('Unsupported operating system.');
+    }
+}
+
+function isWindows() {
+    return os.platform() === 'win32';
+}
+
+function isGNOME() {
+    return os.platform() === 'linux' && process.env.XDG_CURRENT_DESKTOP && process.env.XDG_CURRENT_DESKTOP.toLowerCase().includes('gnome');
 }
 
 async function setGnomWallpaper(filename: string){
@@ -21,8 +36,7 @@ async function setGnomWallpaper(filename: string){
         console.log(`Wallpaper set successfully: ${filename}`);
     });
 }
-
-function setWindowsWallpaper(filename: string) {
+async function setWindowsWallpaper(filename: string) {
     // Command to set desktop background using PowerShell
     const command = `powershell.exe -ExecutionPolicy Bypass -Command "Set-ItemProperty -path 'HKCU:\\Control Panel\\Desktop\\' -name Wallpaper -value '${filename}'; rundll32.exe user32.dll, UpdatePerUserSystemParameters"`;
 

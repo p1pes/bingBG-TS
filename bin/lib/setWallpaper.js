@@ -13,9 +13,23 @@ exports.setWallpaper = void 0;
 const child_process_1 = require("child_process");
 const os = require('os');
 function setWallpaper(image) {
-    console.log(os.platform());
+    if (isWindows()) {
+    }
+    else if (isGNOME()) {
+        setGnomWallpaper(image);
+        return;
+    }
+    else {
+        console.log('Unsupported operating system.');
+    }
 }
 exports.setWallpaper = setWallpaper;
+function isWindows() {
+    return os.platform() === 'win32';
+}
+function isGNOME() {
+    return os.platform() === 'linux' && process.env.XDG_CURRENT_DESKTOP && process.env.XDG_CURRENT_DESKTOP.toLowerCase().includes('gnome');
+}
 function setGnomWallpaper(filename) {
     return __awaiter(this, void 0, void 0, function* () {
         const command = `gsettings set org.gnome.desktop.background picture-uri-dark file://${filename}`;
