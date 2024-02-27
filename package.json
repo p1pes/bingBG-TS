@@ -8,7 +8,8 @@
   "scripts": {
     "build": "tsc --build --diagnostics --verbose",
     "start": "node ./bin/app.js",
-    "dev": "ts-node ./src/app.ts"
+    "dev": "ts-node ./src/app.ts",
+    "deploy": "mkdir -p ~/myApps && cp -r bin ~/myApps/bingBG && cp package.json ~/myApps/bingBG/ && cd ~/myApps/bingBG && npm install && node app.js"
   },
   "dependencies": {
     "@types/node": "^20.11.19",
