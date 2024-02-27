@@ -31,7 +31,15 @@ function isWindows() {
     return (0, os_1.platform)() === 'win32';
 }
 function isGNOME() {
-    return (0, os_1.platform)() === 'linux' && process.env.XDG_CURRENT_DESKTOP && process.env.XDG_CURRENT_DESKTOP.toLowerCase().includes('gnome');
+    //return platform() === 'linux' && process.env.XDG_CURRENT_DESKTOP && process.env.XDG_CURRENT_DESKTOP.toLowerCase().includes('gnome');
+    //return platform() === 'linux';
+    try {
+        (0, child_process_1.execSync)('gsettings --version');
+        return true;
+    }
+    catch (error) {
+        return false;
+    }
 }
 function setGnomWallpaper(filename) {
     return __awaiter(this, void 0, void 0, function* () {

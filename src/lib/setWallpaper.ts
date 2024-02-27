@@ -1,9 +1,9 @@
-import { exec } from 'child_process';
+import { exec, execSync } from 'child_process';
 import { platform } from 'os';
 import { join } from 'path';
 
 
-export function setWallpaper(image: string){
+export function setWallpaper(image: string){    
     if (isWindows()) {
         setWindowsWallpaper(image);
         return;
@@ -22,7 +22,14 @@ function isWindows() {
 }
 
 function isGNOME() {
-    return platform() === 'linux' && process.env.XDG_CURRENT_DESKTOP && process.env.XDG_CURRENT_DESKTOP.toLowerCase().includes('gnome');
+    //return platform() === 'linux' && process.env.XDG_CURRENT_DESKTOP && process.env.XDG_CURRENT_DESKTOP.toLowerCase().includes('gnome');
+    //return platform() === 'linux';
+    try {
+        execSync('gsettings --version');
+        return true;
+    } catch (error) {
+        return false;
+    }    
 }
 
 async function setGnomWallpaper(filename: string){
