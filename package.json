@@ -9,11 +9,12 @@
     "build": "tsc --build --diagnostics --verbose",
     "start": "node ./bin/app.js",
     "dev": "ts-node ./src/app.ts",
-    "deploy": "mkdir -p ~/myApps && cp -r bin ~/myApps/bingBG && cp package.json ~/myApps/bingBG/ && cd ~/myApps/bingBG && npm install && node app.js"
+    "deploy": "mkdir -p ~/myApps && rm -rf ~/myApps/bingBG && cp -r bin ~/myApps/bingBG && cp package.json ~/myApps/bingBG/ && cd ~/myApps/bingBG && npm install && node app.js"
   },
   "dependencies": {
     "@types/node": "^20.11.19",
     "axios": "^1.6.7",
+    "date-fns": "^3.3.1",
     "fs": "^0.0.1-security",
     "node-fetch": "^3.3.2",
     "typescript": "^5.3.3"
