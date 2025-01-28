@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setWallpaper = void 0;
+exports.setWallpaper = setWallpaper;
 const child_process_1 = require("child_process");
 const os_1 = require("os");
 const path_1 = require("path");
@@ -26,7 +26,6 @@ function setWallpaper(image) {
         console.log('Unsupported operating system.');
     }
 }
-exports.setWallpaper = setWallpaper;
 function isWindows() {
     return (0, os_1.platform)() === 'win32';
 }

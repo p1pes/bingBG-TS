@@ -12,7 +12,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.fileExistsLocally = exports.camelCase = void 0;
+exports.camelCase = camelCase;
+exports.fileExistsLocally = fileExistsLocally;
 const fs_1 = __importDefault(require("fs"));
 function camelCase(str) {
     str = str.replace(/[^a-zA-Z0-9\s]/g, '');
@@ -20,7 +21,6 @@ function camelCase(str) {
         return group.toUpperCase();
     });
 }
-exports.camelCase = camelCase;
 function fileExistsLocally(filename) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -32,4 +32,3 @@ function fileExistsLocally(filename) {
         }
     });
 }
-exports.fileExistsLocally = fileExistsLocally;
